@@ -1,11 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     {% load static %}
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .container {
+            display: flex;
+            justify-content: center;
+        }
+
+        .lbl-input {
+            padding-bottom: 10px;
+        }
+
+        input{
+            width: 300px;
+        }
+    </style>
 </head>
-    <body>
-    <!--Add a registration form here -->
-    </body>
+
+<body>
+    {% include 'Navbar.html' %}
+    <h1 class="h1" style="text-align: center; margin-top: 30px;">Sign Up</h1>
+    <hr>
+    <div class="container">
+        <form action="{% url 'djangoapp:registration' %}" method="post">
+
+            <div class="lbl-input">
+                <label for="username"><b>User Name</b></label>
+                <div>
+                    <input type="text" placeholder="Enter User Name: " name="username" required>
+                </div>
+            </div>
+
+            <div class="lbl-input">
+                <label for="firstname"><b>First Name</b></label>
+                <div>
+                    <input type="text" placeholder="Enter First Name: " name="firstname" required>
+                </div>
+            </div>
+
+            <div class="lbl-input">
+                <label for="lastname"><b>Last Name</b></label>
+                <div>
+                    <input type="text" placeholder="Enter Last Name: " name="lastname" required>
+                </div>
+            </div>
+
+
+            <div class="lbl-input">
+                <label for="psw"><b>Password</b></label>
+                <div>
+                    <input type="password" placeholder="Enter Password: " name="psw" required>
+                </div>
+            </div>
+
+            <div class="lbl-input">
+                {% csrf_token %}
+                <button class="btn btn-primary" style="margin-left: 35%" type="submit">Sign Up</button>
+            </div>
+    </div>
+    </form>
+</body>
+
 </html>
