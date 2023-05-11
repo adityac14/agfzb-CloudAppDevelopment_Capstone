@@ -1,12 +1,36 @@
 import requests
 import json
 # import related models here
+from .models import CarDealer
 from requests.auth import HTTPBasicAuth
 
 
 # Create a `get_request` to make HTTP GET requests
 # e.g., response = requests.get(url, params=params, headers={'Content-Type': 'application/json'},
 #                                     auth=HTTPBasicAuth('apikey', api_key))
+def get_request(url, api_key=False, **kwargs):
+    print(f"GET from {url}")
+    if api_key:
+        # Basic authentication GET
+        try:
+            response = requests.get(url, headers={'Content-Type': 'application/json'},
+                                    params=kwargs, auth=HTTPBasicAuth('apikey', api_key))
+        except:
+            print("An error occurred while making GET request. ")
+    else:
+        # No authentication GET
+        try:
+            response = requests.get(url, headers={'Content-Type': 'application/json'},
+                                    params=kwargs)
+        except:
+            print("An error occurred while making GET request. ")
+
+    # Retrieving the response status code and content
+    status_code = response.status_code
+    print(f"With status {status_code}")
+    json_data = json.loads(response.text)
+
+    return json_data
 
 
 # Create a `post_request` to make HTTP POST requests
@@ -17,6 +41,33 @@ from requests.auth import HTTPBasicAuth
 # def get_dealers_from_cf(url, **kwargs):
 # - Call get_request() with specified arguments
 # - Parse JSON results into a CarDealer object list
+def get_dealers_from_cf(url, **kwargs):
+    results = []
+    state = kwargs.get("state")
+    if state:
+        json_result = get_request(url, state=state)
+    else:
+        json_result = get_request(url)
+
+    # print('json_result from line 31', json_result)    
+
+    if json_result:
+        # Get the row list in JSON as dealers
+        dealers = json_result
+        # For each dealer object
+        for dealer in dealers:
+            # Get its content in `doc` object
+            dealer_doc = dealer["doc"]
+            # print(dealer_doc)
+            # Create a CarDealer object with values in `doc` object
+            dealer_obj = CarDealer(address=dealer_doc["address"], city=dealer_doc["city"],
+                                   id=dealer_doc["id"], lat=dealer_doc["lat"], long=dealer_doc["long"], full_name=dealer_doc["full_name"],
+                                
+                                   st=dealer_doc["st"], zip=dealer_doc["zip"], short_name=dealer_doc["short_name"])
+            results.append(dealer_obj)
+
+    return results
+
 
 
 # Create a get_dealer_reviews_from_cf method to get reviews by dealer id from a cloud function
