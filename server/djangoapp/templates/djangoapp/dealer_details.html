@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Dealership Review</title>
@@ -7,12 +8,33 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 
-    <body>
+<body>
 
     <!--Add a nav bar here -->
+    {% include 'Navbar.html' %}
+    <h1 class="h1" style="text-align: center; margin-top: 50px;">Reviews for <strong>{{dealer.full_name}}</h1>
+    <hr>
 
     <!-- Add reviews as cards -->
+    <!-- {% if review_list %}
+    <div class="container">
+        <div class="card-deck">
+            {% for review in review_list %}
+            <div class="card" style="width: 36rem;">
+                <div class="card-body bg-light">
+                    <h5 class="card-title">{{ review.car_make }}, {{ review.car_model }}</h5>
+                    <h5 class="card-title">{{ review.car_year }}</h5>
+                    <p class="card-text">{{ review.review }}</p>
 
-    </body>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% else %}
+    <p>No reviews are available.</p>
+    {% endif %} -->
+
+</body>
 
 </html>

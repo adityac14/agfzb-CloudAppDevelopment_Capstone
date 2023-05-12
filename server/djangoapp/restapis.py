@@ -1,8 +1,9 @@
 import requests
 import json
 # import related models here
-from .models import CarDealer
+from .models import CarDealer, DealerReview
 from requests.auth import HTTPBasicAuth
+
 
 
 # Create a `get_request` to make HTTP GET requests
@@ -74,6 +75,77 @@ def get_dealers_from_cf(url, **kwargs):
 # def get_dealer_by_id_from_cf(url, dealerId):
 # - Call get_request() with specified arguments
 # - Parse JSON results into a DealerView object list
+def get_dealer_reviews_from_cf(url, dealer_id):
+    results = []
+    # Perform a GET request with the specified dealer id
+    json_result = get_request(url, dealerId=dealer_id)
+
+    if json_result:
+        # Get all review data from the response
+        reviews = json_result["body"]["data"]["docs"]
+        # For every review in the response
+        for review in reviews:
+            # Create a DealerReview object from the data
+            # These values must be present
+            review_content = review["review"]
+            id = review["_id"]
+            name = review["name"]
+            purchase = review["purchase"]
+            dealership = review["dealership"]
+
+            try:
+                # These values may be missing
+                car_make = review["car_make"]
+                car_model = review["car_model"]
+                car_year = review["car_year"]
+                purchase_date = review["purchase_date"]
+
+                # Creating a review object
+                review_obj = DealerReview(dealership=dealership, id=id, name=name, 
+                                          purchase=purchase, review=review_content, car_make=car_make, 
+                                          car_model=car_model, car_year=car_year, purchase_date=purchase_date
+                                          )
+
+            except KeyError:
+                print("Something is missing from this review. Using default values.")
+                # Creating a review object with some default values
+                review_obj = DealerReview(
+                    dealership=dealership, id=id, name=name, purchase=purchase, review=review_content)
+
+            # Saving the review object to the list of results
+            results.append(review_obj)
+
+    return results
+
+
+def get_dealer_by_id_from_cf(url, id):
+    results = []
+
+    # Call get_request with a URL parameter
+    json_result = get_request(url, id=id)
+
+    if json_result:
+        # Get the row list in JSON as dealers
+        dealers = json_result
+
+        # For each dealer object
+        for dealer in dealers:
+            # Get its content in `doc` object
+            dealer_doc = dealer
+            if dealer_doc["id"] == id:
+                # Create a CarDealer object with values in `doc` object
+                dealer_obj = CarDealer(address=dealer_doc["address"], 
+                                       city=dealer_doc["city"], 
+                                       full_name=dealer_doc["full_name"],
+                                       id=dealer_doc["id"], 
+                                       lat=dealer_doc["lat"], 
+                                       long=dealer_doc["long"],
+                                       short_name=dealer_doc["short_name"],
+                                       st=dealer_doc["st"], 
+                                       zip=dealer_doc["zip"])                    
+                results.append(dealer_obj)
+
+    return results[0]
 
 
 # Create an `analyze_review_sentiments` method to call Watson NLU and analyze text
