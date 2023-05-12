@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
 # from .models import related models
 # from .restapis import related methods
-from .restapis import get_dealers_from_cf, get_dealer_by_id_from_cf, get_dealer_reviews_from_cf
+from .restapis import get_dealer_by_id_from_cf, get_dealers_from_cf, get_dealer_reviews_from_cf, post_request
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from datetime import datetime
@@ -105,7 +105,7 @@ def get_dealerships(request):
 
 
 # Create a `get_dealer_details` view to render the reviews of a dealer
-# def get_dealer_details(request, dealer_id):
+    
 # def get_dealer_details(request, id):
 #     if request.method == "GET":
 #         context = {}
@@ -113,24 +113,12 @@ def get_dealerships(request):
 #         dealer = get_dealer_by_id_from_cf(dealer_url, id=id)
 #         context["dealer"] = dealer
     
-#         review_url = "https://us-east.functions.appdomain.cloud/api/v1/web/3c9f873f-d7cc-496c-9831-4447aaba0e81/api/review"
-#         reviews = get_dealer_reviews_from_cf(review_url, id=id)
-#         print(reviews)
-#         context["reviews"] = reviews
+#         # review_url = "https://us-east.functions.appdomain.cloud/api/v1/web/3c9f873f-d7cc-496c-9831-4447aaba0e81/api/review"
+#         # reviews = get_dealer_reviews_from_cf(review_url, id=id)
+#         # print(f'Reviews: {reviews}')
+#         # context["reviews"] = reviews
         
-#         return render(request, 'djangoapp/dealer_details.html', context)
-    
-# def get_dealer_details(request, dealer_id):
-#     context = {}
-#     if request.method == "GET":
-#         url = 'https://us-east.functions.appdomain.cloud/api/v1/web/3c9f873f-d7cc-496c-9831-4447aaba0e81/api/review'
-#         reviews = get_dealer_reviews_from_cf(url, dealer_id=dealer_id)
-#         context = {
-#             "reviews":  reviews, 
-#             "dealer_id": dealer_id
-#         }
-
-#         return render(request, 'djangoapp/dealer_details.html', context)
+#         return render(request, 'djangoapp/dealer_details.html', context)    
     
 def get_dealer_details(request, id):
     if request.method == "GET":
@@ -139,12 +127,20 @@ def get_dealer_details(request, id):
         dealer = get_dealer_by_id_from_cf(dealer_url, id=id)
         context["dealer"] = dealer
     
-        # review_url = "https://us-east.functions.appdomain.cloud/api/v1/web/3c9f873f-d7cc-496c-9831-4447aaba0e81/api/review"
-        # reviews = get_dealer_reviews_from_cf(review_url, id=id)
-        # print(reviews)
-        # context["reviews"] = reviews
+        review_url = "https://us-east.functions.appdomain.cloud/api/v1/web/3c9f873f-d7cc-496c-9831-4447aaba0e81/api/review"
+        reviews = get_dealer_reviews_from_cf(review_url, id=id)
+        print(reviews)
+        context["reviews"] = reviews
         
-        return render(request, 'djangoapp/dealer_details.html', context)    
+        return render(request, 'djangoapp/dealer_details.html', context)
+
+    
+    
+    
+    
+    
+    
+    
 # ...
 
 # Create a `add_review` view to submit a review
