@@ -98,6 +98,7 @@ def get_dealer_reviews_from_cf(url, **kwargs):
 
 def get_dealer_by_id_from_cf(url, id):
     json_result = get_request(url, id=id)
+    print({f'JSON Result: {json_result}'})
     if json_result:
         dealers = json_result
         dealer_doc = dealers[0]
